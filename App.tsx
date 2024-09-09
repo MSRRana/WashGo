@@ -12,11 +12,11 @@ const App = () => {
   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <StoreProvider store={store}>
-        <MainRoutes />
-      </StoreProvider>
-    </SafeAreaView>
+    // <SafeAreaView style={{flex: 1}}>
+    <StoreProvider store={store}>
+      <MainRoutes />
+    </StoreProvider>
+    // </SafeAreaView>
   );
 };
 
