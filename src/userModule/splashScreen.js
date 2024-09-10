@@ -1,8 +1,9 @@
 import {View, Text, Image, ImageBackground, Dimensions} from 'react-native';
 import React, {useEffect} from 'react';
-import {setUserDetails} from '../reduxFolder/actions/LoginAction';
 
 import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setUserData} from '../reduxFolder/actions/LoginAction';
 
 const {width, height} = Dimensions.get('window');
 const SplashScreen = props => {
@@ -10,12 +11,24 @@ const SplashScreen = props => {
 
   const dispatch = useDispatch();
   const {userDetails} = useSelector(state => state.loginscreen);
-
   useEffect(() => {
-    setTimeout(() => {
-      navigation.navigate('WelcomeScreen');
-    }, 500);
-  }, []);
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem('login_data');
+
+        if (token) {
+          navigation.navigate('HomeScreen');
+          dispatch(setUserData(JSON.parse(token)));
+        } else {
+          navigation.navigate('WelcomeScreen');
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
+
+    checkLoginStatus();
+  }, [navigation]);
 
   // console.log(userDetails, 'userDetails');
   return (

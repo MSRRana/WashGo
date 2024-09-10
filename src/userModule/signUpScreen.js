@@ -11,42 +11,58 @@ import React, {useState} from 'react';
 import GoTextInput from '../components/GoTextInput';
 import GoButton from '../components/GoButton';
 import GoCheckBox from '../components/GoCheckBox';
+import GoNavigationText from '../components/GoNavigationText';
+import GoBottomText from '../components/GoBottomText';
+import {signFun} from '../reduxFolder/actions/LoginAction';
+import GoError from '../components/GoError';
+import {useDispatch} from 'react-redux';
 const SignUpScreen = props => {
   const {navigation} = props;
+  const dispatch = useDispatch();
 
   //local State
 
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = async event => {
-    navigation.navigate('LoginScreen');
-    // const myHeaders = new Headers();
-    // myHeaders.append('Content-Type', 'application/json');
+  const [checkTerm, setCheckTerm] = useState(false);
+  const [isPasswordVisible, setPasswordVisible] = useState(true);
 
-    // const raw = JSON.stringify({
-    //   phone: phone,
-    //   password: password,
-    //   name: name,
-    // });
+  const [inputError, setInputErrors] = useState({
+    nameError: '',
+    phoneError: '',
+    passwordError: '',
+    checkBoxError: '',
+  });
+  const userSignUpFun = () => {
+    let errors = {};
+    if (name.trim() === '') {
+      errors.nameError = 'Name is required';
+    }
+    if (checkTerm == false) {
+      errors.checkBoxError = 'Please Agree all terms and condition';
+    }
 
-    // const requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: raw,
-    //   redirect: 'follow',
-    // };
+    if (phone.trim() === '') {
+      errors.phoneError = 'Phone number is required';
+    } else if (phone.length !== 10) {
+      errors.phoneError = 'Phone number must be of 10 digits';
+    }
 
-    // try {
-    //   const response = await fetch(
-    //     'https://tor.appdevelopers.mobi/api/register',
-    //     requestOptions,
-    //   );
-    //   const result = await response.text();
-    //   setResponse(result);
-    // } catch (error) {
-    //   setError(error.message);
-    // }
+    if (password.trim() === '') {
+      errors.passwordError = 'Password is required';
+    } else if (password.length < 6) {
+      errors.passwordError = 'Password must be of 6 characters';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      console.log('Hello222');
+      setInputErrors({...inputError, ...errors});
+      return;
+    } else {
+      console.log('Hello');
+      dispatch(signFun(phone, password, name, navigation));
+    }
   };
 
   return (
@@ -77,77 +93,87 @@ const SignUpScreen = props => {
             placeholder={'Enter your Name'}
             iconName={'person-outline'}
             autoCorrect={false}
+            onChangeText={text => {
+              setName(text);
+              setInputErrors(prevState => ({
+                ...prevState,
+                nameError: '',
+              }));
+            }}
+            value={name}
+            iconColor={name.length > 0 ? '#8FE8D8' : '#000000'}
           />
+          {inputError?.nameError ? (
+            <GoError errorText={inputError?.nameError} />
+          ) : null}
           <GoTextInput
+            maxLength={10}
             title={'Phone'}
             placeholder={'Enter your Phone No'}
             iconName={'call-outline'}
             keyboardType={'numeric'}
             autoCorrect={false}
+            onChangeText={text => {
+              setPhone(text);
+              setInputErrors(prevState => ({
+                ...prevState,
+                phoneError: '',
+              }));
+            }}
+            value={phone}
+            iconColor={phone.length == 10 ? '#8FE8D8' : '#000000'}
           />
+          {inputError?.phoneError ? (
+            <GoError errorText={inputError?.phoneError} />
+          ) : null}
           <GoTextInput
             title={'Password'}
             placeholder={'password'}
             iconName={'lock-closed-outline'}
             autoCorrect={false}
+            hiddenIcon={!isPasswordVisible ? 'eye-outline' : 'eye-off-outline'}
+            onChangeText={text => {
+              setPassword(text);
+              setInputErrors(prevState => ({
+                ...prevState,
+                passwordError: false,
+              }));
+            }}
+            value={password}
+            iconColor={password.length >= 6 ? '#8FE8D8' : '#000000'}
+            hiddenOnPress={() => setPasswordVisible(!isPasswordVisible)}
+            secureTextEntry={isPasswordVisible}
           />
+          {inputError?.passwordError ? (
+            <GoError errorText={inputError?.passwordError} />
+          ) : null}
           <GoCheckBox
-            onTermsPress={() => {
-              console.log('Hello');
+            checked={checkTerm}
+            onPress={() => {
+              setCheckTerm(!checkTerm);
+              setInputErrors(prevState => ({
+                ...prevState,
+                checkBoxError: false,
+              }));
             }}
           />
-          <GoButton title={'Sign Up'} onPress={handleSubmit} />
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 14,
-                lineHeight: 20,
-                color: '#808080',
-                fontWeight: 400,
-                marginVertical: 10,
-              }}>
-              Already have an account?{' '}
-            </Text>
+          {inputError?.checkBoxError ? (
+            <GoError errorText={inputError?.checkBoxError} />
+          ) : null}
+          <GoButton title={'Sign Up'} onPress={userSignUpFun} />
 
-            <Text
-              style={{
-                color: '#000',
-                // textDecorationLine: 'underline',
-                fontWeight: 700,
-              }}>
-              Sign In
-            </Text>
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 10,
-            }}>
-            <Text
-              style={{
-                fontSize: 14,
-                lineHeight: 20,
-                color: '#808080',
-                fontWeight: 400,
-              }}>
-              By login or sign up, you agree to our terms of use and
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                lineHeight: 20,
-                color: '#808080',
-                fontWeight: 400,
-              }}>
-              privacy policy
-            </Text>
-          </View>
+          <GoNavigationText
+            style={{marginTop: 20}}
+            mainText={'Already have an account?'}
+            subText={'Sign in'}
+            onPress={() => navigation.navigate('LoginScreen')}
+          />
+
+          <GoBottomText
+            style={{marginTop: 0}}
+            mainText={'By login or sign up, you agree to our terms of use and'}
+            subText={'privacy policy'}
+          />
         </View>
       </View>
       <Image
@@ -158,6 +184,7 @@ const SignUpScreen = props => {
           position: 'absolute',
           bottom: -10,
           right: -10,
+          zIndex: -10,
           borderBottomRightRadius: 5,
           borderBottomLeftRadius: 5,
         }}

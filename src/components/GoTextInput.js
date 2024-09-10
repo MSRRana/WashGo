@@ -13,26 +13,33 @@ const GoTextInput = props => {
     title,
     hiddenIcon,
     hiddenOnPress,
+    onChangeText,
+    iconColor,
+    maxLength,
+    secureTextEntry,
   } = props;
   return (
     <View style={styles.headContainer}>
       <Text>{title}</Text>
       <View style={styles.container}>
-        <Icon name={iconName} size={20} color="gray" style={styles.icon} />
+        <Icon name={iconName} size={20} color={iconColor} style={styles.icon} />
         <TextInput
+          maxLength={maxLength}
           style={styles.input}
           value={value}
           placeholder={placeholder}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           autoCorrect={autoCorrect}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
         />
         {hiddenIcon ? (
           <Icon
             name={hiddenIcon}
             size={20}
             color="gray"
-            style={styles.icon}
+            style={[styles.icon]}
             onPress={hiddenOnPress}
           />
         ) : null}

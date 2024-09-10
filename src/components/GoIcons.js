@@ -1,11 +1,13 @@
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const GoIcons = props => {
-  const {style, iconName} = props;
+  const {style, iconName, onPress} = props;
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
       style={[
         {
           padding: 10,
@@ -16,7 +18,7 @@ const GoIcons = props => {
         style,
       ]}>
       <Icon name={iconName} color={'#000'} size={22} />
-    </View>
+    </TouchableOpacity>
   );
 };
 

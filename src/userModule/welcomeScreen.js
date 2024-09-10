@@ -1,6 +1,6 @@
 import {View, Text, SafeAreaView, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
-
+import GoNavigationText from '../components/GoNavigationText';
 const WelcomeScreen = props => {
   const {navigation} = props;
   return (
@@ -51,28 +51,12 @@ const WelcomeScreen = props => {
             Let’s Start
           </Text>
         </TouchableOpacity>
-
-        <Text
-          style={{
-            fontSize: 16,
-            textAlign: 'center',
-            color: '#808080',
-            marginHorizontal: 60,
-            marginTop: 15,
-          }}>
-          Already have an account?{' '}
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: 600,
-              textAlign: 'center',
-              color: '#000000',
-              marginHorizontal: 60,
-            }}
-            onPress={() => navigation.navigate('LoginScreen')}>
-            Sign in
-          </Text>
-        </Text>
+        <GoNavigationText
+          style={{marginTop: 20}}
+          mainText={'Already have an account?'}
+          subText={'Sign in'}
+          onPress={() => navigation.navigate('LoginScreen')}
+        />
       </View>
     </View>
   );
