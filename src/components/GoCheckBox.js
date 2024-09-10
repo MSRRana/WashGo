@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const GoCheckBox = props => {
-  const {style, onPress, checked, iconStyle, onTermsPress} = props;
+  const {style, onPress, checked, iconStyle} = props;
   const [isSelected, setSelection] = useState(false);
 
   return (
@@ -14,13 +14,13 @@ const GoCheckBox = props => {
         style={[{flexDirection: 'row'}, style]}>
         <Icon
           name={!checked ? 'checkbox-blank-outline' : 'checkbox-marked'}
-          color={'#CCC'}
+          color={checked ? '#93E4FF' : '#CCC'}
           size={22}
           style={iconStyle}
         />
         <Text style={styles.text}>
           Agree with{' '}
-          <Text style={styles.link} onPress={onTermsPress} activeOpacity={0.7}>
+          <Text style={styles.link} activeOpacity={0.7}>
             Terms & Conditions
           </Text>
         </Text>

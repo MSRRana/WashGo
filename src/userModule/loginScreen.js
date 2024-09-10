@@ -5,22 +5,56 @@ import {
   Image,
   Alert,
   ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
 import GoTextInput from '../components/GoTextInput';
 import GoIcons from '../components/GoIcons';
 import GoButton from '../components/GoButton';
-import GoCheckBox from '../components/GoCheckBox';
+import GoBottomText from '../components/GoBottomText';
+import GoNavigationText from '../components/GoNavigationText';
+import GoError from '../components/GoError';
+import {loginFun} from '../reduxFolder/actions/LoginAction';
+import {useDispatch, useSelector} from 'react-redux';
 const LoginScreen = props => {
   const {navigation} = props;
-
+  const dispatch = useDispatch();
   //local State
 
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = async event => {
-    navigation.navigate('SignUpScreen');
+  const [isPasswordVisible, setPasswordVisible] = useState(true);
+
+  const [inputError, setInputErrors] = useState({
+    phoneError: '',
+    passwordError: '',
+  });
+
+  const passwordRegex = new RegExp(
+    '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+  );
+  const handleSubmit = () => {
+    let errors = {};
+
+    if (phone.trim() === '') {
+      errors.phoneError = 'Phone number is required';
+    } else if (phone.length !== 10) {
+      errors.phoneError = 'Phone number must be of 10 digits';
+    }
+
+    if (password.trim() === '') {
+      errors.passwordError = 'Password is required';
+    } else if (password.length < 6) {
+      errors.passwordError = 'Password must be of 6 characters';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setInputErrors({...inputError, ...errors});
+      return;
+    } else {
+      dispatch(loginFun(phone, password, navigation));
+    }
     // const myHeaders = new Headers();
     // myHeaders.append('Content-Type', 'application/json');
     // const raw = JSON.stringify({
@@ -70,22 +104,50 @@ const LoginScreen = props => {
           </Text>
 
           <GoTextInput
+            maxLength={10}
             title={'Phone'}
             placeholder={'Enter your Phone No'}
             iconName={'call-outline'}
             keyboardType={'numeric'}
             autoCorrect={false}
+            onChangeText={text => {
+              setPhone(text);
+              setInputErrors(prevState => ({
+                ...prevState,
+                phoneError: '',
+              }));
+            }}
+            value={phone}
+            iconColor={phone.length == 10 ? '#8FE8D8' : '#000000'}
           />
+
+          {inputError?.phoneError ? (
+            <GoError errorText={inputError?.phoneError} />
+          ) : null}
           <GoTextInput
+            maxLength={20}
             title={'Password'}
             placeholder={'password'}
             iconName={'lock-closed-outline'}
             autoCorrect={false}
-            hiddenIcon={'eye-outline'}
-            hiddenOnPress={() => console.log('hidden')}
+            hiddenIcon={!isPasswordVisible ? 'eye-outline' : 'eye-off-outline'}
+            onChangeText={text => {
+              setPassword(text);
+              setInputErrors(prevState => ({
+                ...prevState,
+                passwordError: false,
+              }));
+            }}
+            value={password}
+            iconColor={password.length >= 6 ? '#8FE8D8' : '#000000'}
+            hiddenOnPress={() => setPasswordVisible(!isPasswordVisible)}
+            secureTextEntry={isPasswordVisible}
           />
+          {inputError?.passwordError ? (
+            <GoError errorText={inputError?.passwordError} />
+          ) : null}
           <Text
-            onPress={() => navigation.navigate('HomeScreen')}
+            onPress={() => Alert.alert('This functionality is not added')}
             style={{
               color: '#000',
               textDecorationLine: 'underline',
@@ -127,61 +189,26 @@ const LoginScreen = props => {
               justifyContent: 'center',
               marginVertical: 20,
             }}>
-            <GoIcons iconName={'logo-google'} />
-            <GoIcons style={{marginLeft: 20}} iconName={'logo-apple'} />
+            <GoIcons
+              iconName={'logo-google'}
+              onPress={() => Alert.alert('This functionality is not added')}
+            />
+            <GoIcons
+              style={{marginLeft: 20}}
+              iconName={'logo-apple'}
+              onPress={() => Alert.alert('This functionality is not added')}
+            />
           </View>
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: 10,
-            }}>
-            <Text
-              style={{
-                fontSize: 14,
-                lineHeight: 20,
-                color: '#808080',
-                fontWeight: 400,
-                marginVertical: 10,
-              }}>
-              Don't have an account?{' '}
-            </Text>
-
-            <Text
-              style={{
-                color: '#000',
-                textDecorationLine: 'underline',
-                fontWeight: 700,
-              }}>
-              Sign Up
-            </Text>
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 40,
-            }}>
-            <Text
-              style={{
-                fontSize: 14,
-                lineHeight: 20,
-                color: '#808080',
-                fontWeight: 400,
-              }}>
-              By login or sign up, you agree to our terms of use and
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                lineHeight: 20,
-                color: '#808080',
-                fontWeight: 400,
-              }}>
-              privacy policy
-            </Text>
-          </View>
+          <GoNavigationText
+            style={{marginTop: 20}}
+            mainText={`Don't have an account?`}
+            subText={'Sign Up'}
+            onPress={() => navigation.navigate('SignUpScreen')}
+          />
+          <GoBottomText
+            mainText={'By login or sign up, you agree to our terms of use and'}
+            subText={'privacy policy'}
+          />
         </View>
       </View>
       <Image
@@ -192,6 +219,7 @@ const LoginScreen = props => {
           bottom: -10,
           left: 2,
           position: 'absolute',
+          zIndex: -10,
         }}
         source={require('../assets/images/bottomLoginImg.png')}></Image>
     </SafeAreaView>
