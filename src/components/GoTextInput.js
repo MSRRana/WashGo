@@ -2,27 +2,49 @@ import {View, Text, TextInput, StyleSheet} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const GoTextInput = () => {
+const GoTextInput = props => {
+  const {
+    placeholder,
+    keyboardType,
+    autoCapitalize,
+    value,
+    iconName,
+    autoCorrect,
+    title,
+    hiddenIcon,
+    hiddenOnPress,
+  } = props;
   return (
-    <View style={styles.container}>
-      <Icon
-        name="mail-open-outline"
-        size={20}
-        color="gray"
-        style={styles.icon}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="xyz@gmail.com"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+    <View style={styles.headContainer}>
+      <Text>{title}</Text>
+      <View style={styles.container}>
+        <Icon name={iconName} size={20} color="gray" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          value={value}
+          placeholder={placeholder}
+          keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
+        />
+        {hiddenIcon ? (
+          <Icon
+            name={hiddenIcon}
+            size={20}
+            color="gray"
+            style={styles.icon}
+            onPress={hiddenOnPress}
+          />
+        ) : null}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  headContainer: {
+    marginTop: 5,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -31,6 +53,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
+    marginVertical: 5,
   },
   icon: {
     marginRight: 10,

@@ -2,10 +2,11 @@ import * as React from 'react';
 import DeviceInfo from 'react-native-device-info';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import loginScreen from '../userModule/loginScreen';
-import splashScreen from '../userModule/splashScreen';
-import signUpScreen from '../userModule/signUpScreen';
-import welcomeScreen from '../userModule/welcomeScreen';
+import LoginScreen from '../userModule/loginScreen';
+import SplashScreen from '../userModule/splashScreen';
+import SignUpScreen from '../userModule/signUpScreen';
+import WelcomeScreen from '../userModule/welcomeScreen';
+import HomeScreen from '../userModule/homeScreen';
 
 const Stack = createNativeStackNavigator();
 const deviceType = DeviceInfo.getDeviceType();
@@ -21,32 +22,40 @@ const MainRoutes = () => {
     <NavigationContainer independent={true} theme={MyTheme}>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
-          name="splashScreen"
-          component={splashScreen}
+          name="SplashScreen"
+          component={SplashScreen}
           options={{
             headerShown: false,
             orientation: deviceType === 'Handset' ? 'portrait' : 'landscape',
           }}
         />
         <Stack.Screen
-          name="loginScreen"
-          component={loginScreen}
+          name="LoginScreen"
+          component={LoginScreen}
           options={{
             headerShown: false,
             orientation: deviceType === 'Handset' ? 'portrait' : 'landscape',
           }}
         />
         <Stack.Screen
-          name="signUpScreen"
-          component={signUpScreen}
+          name="SignUpScreen"
+          component={SignUpScreen}
           options={{
             headerShown: false,
             orientation: deviceType === 'Handset' ? 'portrait' : 'landscape',
           }}
         />
         <Stack.Screen
-          name="welcomeScreen"
-          component={welcomeScreen}
+          name="WelcomeScreen"
+          component={WelcomeScreen}
+          options={{
+            headerShown: false,
+            orientation: deviceType === 'Handset' ? 'portrait' : 'landscape',
+          }}
+        />
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
           options={{
             headerShown: false,
             orientation: deviceType === 'Handset' ? 'portrait' : 'landscape',

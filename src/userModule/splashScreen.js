@@ -5,7 +5,7 @@ import {setUserDetails} from '../reduxFolder/actions/LoginAction';
 import {useDispatch, useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
-const splashScreen = props => {
+const SplashScreen = props => {
   const {navigation} = props;
 
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ const splashScreen = props => {
 
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('welcomeScreen');
+      navigation.navigate('WelcomeScreen');
     }, 500);
   }, []);
 
@@ -25,4 +25,4 @@ const splashScreen = props => {
   );
 };
 
-export default splashScreen;
+export default SplashScreen;

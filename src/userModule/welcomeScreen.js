@@ -1,7 +1,7 @@
 import {View, Text, SafeAreaView, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-const welcomeScreen = props => {
+const WelcomeScreen = props => {
   const {navigation} = props;
   return (
     <View style={{flex: 1}}>
@@ -46,7 +46,7 @@ const welcomeScreen = props => {
             shadowRadius: 2.22,
             elevation: 3,
           }}
-          onPress={() => navigation.navigate('signUpScreen')}>
+          onPress={() => navigation.navigate('SignUpScreen')}>
           <Text style={{fontSize: 20, fontWeight: '700', color: '#092A4D'}}>
             Let’s Start
           </Text>
@@ -69,7 +69,7 @@ const welcomeScreen = props => {
               color: '#000000',
               marginHorizontal: 60,
             }}
-            onPress={() => navigation.navigate('loginScreen')}>
+            onPress={() => navigation.navigate('LoginScreen')}>
             Sign in
           </Text>
         </Text>
@@ -78,4 +78,4 @@ const welcomeScreen = props => {
   );
 };
 
-export default welcomeScreen;
+export default WelcomeScreen;
